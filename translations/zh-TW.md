@@ -538,7 +538,7 @@ const { firstName: first, age, city = "Paris" } = person; // 這樣就搞定了�
 
 console.log(age) // 35 -- 一個名為 age 的新變數被創建出來了，其值等同於 person.age
 console.log(first) // "Nick" -- 一個名為 first 的新變數被創建出來了，其值等同於person.firstName
-console.log(firstName) // Undefined -- person.firstName 雖然存在，但其值是存在名叫 first 的新變數
+console.log(firstName) // ReferenceError -- person.firstName 雖然存在，但其值是存在名叫 first 的新變數
 console.log(city) // "Paris" -- 一個名為 city 的新變數被創建出來了，同時因為 person.city 是未被定義的，所以 city 將等同於預設值也就是 "Paris"。
 ```
 
@@ -647,8 +647,8 @@ const students = [
 
 const aboveTenSum = students
   .map(student => student.grade) // map the students array to an array of their grades
-  .filter(grade => grade >= 10) // we filter the grades array to keep those above 10
-  .reduce((prev, next) => prev + next, 0); // we sum all the grades above 10 one by one
+  .filter(grade => grade >= 10) // we filter the grades array to keep those 10 or above
+  .reduce((prev, next) => prev + next, 0); // we sum all the grades 10 or above one by one
 
 console.log(aboveTenSum) // 44 -- 10 (Nick) + 15 (John) + 19 (Julia), Nathalie below 10 is ignored
 ```
@@ -838,7 +838,7 @@ const arr2 = [...arr1, "d", "e", "f"]; // ["a", "b", "c", "d", "e", "f"]
 <a name="function-rest-parameter-26"></a>
 ##### 不定參數
 
-在有著不定參數的函數當中，我們可以使用 rest 運算子將參數注入到我們可以進行迴圈操作的 array。這裡已經有一個名為 **argument** 的 object 被綁定在函數上，等同於把 array 中的所有參數都傳遞給函數。
+在有著不定參數的函數當中，我們可以使用 rest 運算子將參數注入到我們可以進行迴圈操作的 array。這裡已經有一個名為 **arguments** 的 object 被綁定在函數上，等同於把 array 中的所有參數都傳遞給函數。
 
 ```js
 function myFunc() {

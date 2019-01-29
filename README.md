@@ -100,13 +100,19 @@ When you struggle to understand a notion, I suggest you look for answers on the 
       - [External resources](#external-resources-9)
     + [Truthy / Falsy](#truthy--falsy)
       - [External resources](#external-resources-10)
+    + [Anamorphisms / Catamporphisms](#anamorphisms-and-catamorphisms)
+      - [Anamorphisms](#anamorphisms)
+      - [Catamorphisms](#catamorphisms)
+      - [External resources](#external-resources-11)
+    + [Generators](#generators)
+      - [External resources](#external-resources-12)
     + [Static Methods](#static-methods)
       - [Short Explanation](#short-explanation-1)
       - [Sample Code](#sample-code-8)
       - [Detailed Explanation](#detailed-explanation-2)
         * [Calling other static methods from a static method](#calling-other-static-methods-from-a-static-method)
         * [Calling static methods from non-static methods](#calling-static-methods-from-non-static-methods)
-      - [External resources](#external-resources-11)
+      - [External resources](#external-resources-13)
   * [Glossary](#glossary)
     + [Scope](#-scope)
     + [Variable mutation](#-variable-mutation)
@@ -360,18 +366,16 @@ An **explicit return** is a function where the *return* keyword is used in its b
 
 In the traditional way of writing functions, the return was always explicit. But with arrow functions, you can do *implicit return* which means that you don't need to use the keyword *return* to return a value.
 
-To do an implicit return, the code must be written in a one-line sentence.
-
 ```js
   const double = (x) => {
     return x * 2; // Explicit return here
   }
 ```
 
-Since there only is a return value here, we can do an implicit return.
+Since this function only returns something (no instructions before the *return* keyword) we can do an implicit return.
 
 ```js
-  const double = (x) => x * 2;
+  const double = (x) => x * 2; // Correct, returns x*2
 ```
 
 To do so, we only need to **remove the brackets** and the **return** keyword. That's why it's called an *implicit* return, the *return* keyword is not there, but this function will indeed return ```x * 2```.
@@ -529,7 +533,7 @@ const { firstName: first, age, city = "Paris" } = person; // That's it !
 
 console.log(age) // 35 -- A new variable age is created and is equal to person.age
 console.log(first) // "Nick" -- A new variable first is created and is equal to person.firstName
-console.log(firstName) // Undefined -- person.firstName exists BUT the new variable created is named first
+console.log(firstName) // ReferenceError -- person.firstName exists BUT the new variable created is named first
 console.log(city) // "Paris" -- A new variable city is created and since person.city is undefined, city is equal to the default value provided "Paris".
 ```
 
@@ -611,7 +615,7 @@ To sum it up:
 
 I recommend to use them as much as possible in following the principles of functional programming because they are composable, concise and elegant.
 
-With those three methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter* and *reduce* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things gets easier.
+With those three methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter* and *reduce* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things get easier.
 
 #### Sample code
 
@@ -622,7 +626,7 @@ const evenNumbers = numbers.filter(n => n % 2 === 0); // [0, 2, 4, 6]
 const sum = numbers.reduce((prev, next) => prev + next, 0); // 21
 ```
 
-Compute total grade sum for students above 10 by composing map, filter and reduce:
+Compute total grade sum for students with grades 10 or above by composing map, filter and reduce:
 
 ```js
 const students = [
@@ -634,8 +638,8 @@ const students = [
 
 const aboveTenSum = students
   .map(student => student.grade) // we map the students array to an array of their grades
-  .filter(grade => grade >= 10) // we filter the grades array to keep those above 10
-  .reduce((prev, next) => prev + next, 0); // we sum all the grades above 10 one by one
+  .filter(grade => grade >= 10) // we filter the grades array to keep those 10 or above
+  .reduce((prev, next) => prev + next, 0); // we sum all the grades 10 or above one by one
 
 console.log(aboveTenSum) // 44 -- 10 (Nick) + 15 (John) + 19 (Julia), Nathalie below 10 is ignored
 ```
@@ -667,6 +671,13 @@ const doubledNumbers = numbers.map(doubleN);
 console.log(doubledNumbers); // [0, 2, 4, 6, 8, 10, 12]
 ```
 
+**Note** : You will frequently encounter this method used in combination with [arrow functions](#-arrow-function)
+
+```js
+const doubledNumbers = numbers.map(n => n * 2);
+console.log(doubledNumbers); // [0, 2, 4, 6, 8, 10, 12]
+```
+
 ```numbers.map(doubleN)``` produces ```[doubleN(0), doubleN(1), doubleN(2), doubleN(3), doubleN(4), doubleN(5), doubleN(6)]``` which is equal to ```[0, 2, 4, 6, 8, 10, 12]```.
 
 > **Note:** If you do not need to return a new array and just want to do a loop that has side effects, you might just want to use a for / forEach loop instead of a map.
@@ -677,6 +688,13 @@ console.log(doubledNumbers); // [0, 2, 4, 6, 8, 10, 12]
 const evenNumbers = numbers.filter(function(n) {
   return n % 2 === 0; // true if "n" is par, false if "n" isn't
 });
+console.log(evenNumbers); // [0, 2, 4, 6]
+```
+
+**Note** : You will frequently encounter this method used in combination with [arrow functions](#-arrow-function)
+
+```js
+const evenNumbers = numbers.filter(n => n % 2 === 0);
 console.log(evenNumbers); // [0, 2, 4, 6]
 ```
 
@@ -694,7 +712,14 @@ const sum = numbers.reduce(
   0 // accumulator variable value at first iteration step
 );
 
-console.log(sum) //21
+console.log(sum) // 21
+```
+
+**Note** : You will frequently encounter this method used in combination with [arrow functions](#-arrow-function)
+
+```js
+const sum = numbers.reduce((acc, n) => acc + n, 0);
+console.log(sum) // 21
 ```
 
 Just like for .map and .filter methods, .reduce is applied on an array and takes a function as the first parameter.
@@ -815,7 +840,7 @@ const arr2 = [...arr1, "d", "e", "f"]; // ["a", "b", "c", "d", "e", "f"]
 
 ##### Function rest parameter
 
-In function parameters, we can use the rest operator to inject parameters into an array we can loop in. There is already an **argument** object bound to every function that is equal to an array of all the parameters passed into the function.
+In function parameters, we can use the rest operator to inject parameters into an array we can loop in. There is already an **arguments** object bound to every function that is equal to an array of all the parameters passed into the function.
 
 ```js
 function myFunc() {
@@ -962,7 +987,7 @@ fetchingPosts
 
 When you do an *Ajax request* the response is not synchronous because you want a resource that takes some time to come. It even may never come if the resource you have requested is unavailable for some reason (404).
 
-To handle that kind of situations, ES2015 has given us *promises*. Promises can have three different states:
+To handle that kind of situation, ES2015 has given us *promises*. Promises can have three different states:
 
 - Pending
 - Fulfilled
@@ -990,7 +1015,7 @@ const xFetcherPromise = new Promise( // Create promise using "new" keyword and s
 
 As seen in the above sample, the Promise object takes an *executor* function which takes two parameters **resolve** and **reject**. Those parameters are functions which when called are going to move the promise *pending* state to respectively a *fulfilled* and *rejected* state.
 
-The promise is in pending state after instance creation and it's *executor* function is executed immediately. Once one of the function *resolve* or *reject* is called in the *executor* function, the promise will call its associated handlers.
+The promise is in pending state after instance creation and its *executor* function is executed immediately. Once one of the function *resolve* or *reject* is called in the *executor* function, the promise will call its associated handlers.
 
 ##### Promise handlers usage
 
@@ -1047,7 +1072,7 @@ Template tags are *functions that can be prefixed to a [template literal](#templ
 
 > **Note :** A famous library named [styled-components](https://www.styled-components.com/) heavily relies on this feature.
 
-Below is a toy example on they work.
+Below is a toy example on how they work.
 ```js
 function highlight(strings, ...values) {
   const interpolation = strings.reduce((prev, current) => {
@@ -1240,7 +1265,7 @@ class Person {
   }
 
   stringSentence() {
-    return "Hello, my name is " + this.name + " and I'm " + this.age;
+    return `Hello, my name is ${this.name} and I am ${this.age}`;
   }
 }
 
@@ -1343,7 +1368,7 @@ class Square extends Polygon {
 
 In addition to [Promises](#promises), there is a new syntax you might encounter to handle asynchronous code named *async / await*.
 
-The purpose of async/await functions is to simplify the behavior of using promises synchronously and to perform some behavior on a group of Promises. Just as Promises are similar to structured callbacks, async/await is similar to combining generators and promises. Async functions *always* returns a Promise. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
+The purpose of async/await functions is to simplify the behavior of using promises synchronously and to perform some behavior on a group of Promises. Just as Promises are similar to structured callbacks, async/await is similar to combining generators and promises. Async functions *always* return a Promise. ([Ref: MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function))
 
 > **Note :** You must understand what promises are and how they work before trying to understand async / await since they rely on it.
 
@@ -1536,11 +1561,148 @@ myVar ? "truthy" : "falsy"
 
 myVar is evaluated in a boolean context.
 
+Be careful when comparing 2 values. The object values (that should be cast to true) is **not** being casted to Boolean but it forced to convert into a primitive value one using [ToPrimitives specification](http://javascript.info/object-toprimitive). Internally, when an object is compared to Boolean value like `[] == true`, it does `[].toString() == true` so...
+
+```js
+let a = [] == true // a is false since [].toString() give "" back.
+let b = [1] == true // b is true since [1].toString() give "1" back.
+let c = [2] == true // c is false since [2].toString() give "2" back.
+```
+
 #### External resources
 
 - [Truthy (MDN)](https://developer.mozilla.org/en-US/docs/Glossary/Truthy)
 - [Falsy (MDN)](https://developer.mozilla.org/en-US/docs/Glossary/Falsy)
 - [Truthy and Falsy values in JS - Josh Clanton](http://adripofjavascript.com/blog/drips/truthy-and-falsy-values-in-javascript.html)
+
+### Anamorphisms and Catamorphisms
+
+#### Anamorphisms
+
+Anamorphisms are functions that map from some object to a more complex structure containing the type of the object. It is the process of *unfolding* a simple structure into a more complex one. Consider unfolding an integer to a list of integers. The integer is our initial object and the list of integers is the more complex structure.
+
+**Sample code**
+
+```js
+function downToOne(n) {
+  const list = [];
+
+  for (let i = n; i > 0; --i) {
+    list.push(i);
+  }
+
+  return list;
+}
+
+downToOne(5)
+  //=> [ 5, 4, 3, 2, 1 ]
+```
+
+#### Catamorphisms
+
+Catamorphisms are the opposite of Anamorphisms, in that they take objects of more complex structure and *fold* them into simpler structures. Take the following example `product` which take a list of integers and returns a single integer.
+
+**Sample code**
+
+```js
+function product(list) {
+  let product = 1;
+
+  for (const n of list) {
+    product = product * n;
+  }
+
+  return product;
+}
+
+product(downToOne(5)) // 120
+```
+
+#### External resources
+
+* [Anamorphisms in JavaScript](http://raganwald.com/2016/11/30/anamorphisms-in-javascript.html)
+* [Anamorphism](https://en.wikipedia.org/wiki/Anamorphism)
+* [Catamorphism](https://en.wikipedia.org/wiki/Catamorphism)
+
+### Generators
+
+Another way to write the `downToOne` function is to use a Generator. To instantiate a `Generator` object, one must use the `function *` declaration. Generators are functions that can be exited and later re-entered with its context (variable bindings) saved across re-entrances.
+
+For example, the `downToOne` function above can be rewritten as:
+
+```js
+function * downToOne(n) {
+  for (let i = n; i > 0; --i) {
+    yield i;
+  }
+}
+
+[...downToOne(5)] // [ 5, 4, 3, 2, 1 ]
+```
+
+Generators return an iterable object. When the iterator's `next()` function is called, it is executed until the first `yield` expression, which specifies the value to be returned from the iterator or with `yield*`, which delegates to another generator function. When a `return` expression is called in the generator, it will mark the generator as done and pass back as the return value. Further calls to `next()` will not return any new values.
+
+**Sample code**
+
+```js
+// Yield Example
+function * idMaker() {
+  var index = 0;
+  while (index < 2) {
+    yield index;
+    index = index + 1;
+  }
+}
+
+var gen = idMaker();
+
+gen.next().value; // 0
+gen.next().value; // 1
+gen.next().value; // undefined
+```
+
+The `yield*` expression enables a generator to call another generator function during iteration.
+
+```js
+// Yield * Example
+function * genB(i) {
+  yield i + 1;
+  yield i + 2;
+  yield i + 3;
+}
+
+function * genA(i) {
+  yield i;
+  yield* genB(i);
+  yield i + 10;
+}
+
+var gen = genA(10);
+
+gen.next().value; // 10
+gen.next().value; // 11
+gen.next().value; // 12
+gen.next().value; // 13
+gen.next().value; // 20
+```
+
+```js
+// Generator Return Example
+function* yieldAndReturn() {
+  yield "Y";
+  return "R";
+  yield "unreachable";
+}
+
+var gen = yieldAndReturn()
+gen.next(); // { value: "Y", done: false }
+gen.next(); // { value: "R", done: true }
+gen.next(); // { value: undefined, done: true }
+```
+
+#### External resources
+
+* [Mozilla MDN Web Docs, Iterators and Generators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Iterators_and_Generators#Generators)
 
 ### Static Methods
 
@@ -1557,11 +1719,11 @@ class Repo{
   }
 }
 
-//Note that we did not have to create an instance of the Repo class
-console.log(Repo.getName()) //Repo name is modern-js-cheatsheet
+// Note that we did not have to create an instance of the Repo class
+console.log(Repo.getName()) // Repo name is modern-js-cheatsheet
 
 let r = new Repo();
-console.log(r.getName()) //Uncaught TypeError: repo.getName is not a function
+console.log(r.getName()) // Uncaught TypeError: r.getName is not a function
 ```
 
 #### Detailed explanation
@@ -1583,7 +1745,7 @@ class Repo{
   }
 }
 
-console.log(Repo.modifyName()) //Repo name is modern-js-cheatsheet-added-this
+console.log(Repo.modifyName()) // Repo name is modern-js-cheatsheet-added-this
 ```
 
 ##### Calling static methods from non-static methods.
@@ -1606,7 +1768,7 @@ class Repo{
 
 // we need to instantiate the class to use non-static methods
 let r = new Repo()
-console.log(r.useName()) //Repo name is modern-js-cheatsheet and it contains some really important stuff
+console.log(r.useName()) // Repo name is modern-js-cheatsheet and it contains some really important stuff
 ```
 
 2. ###### Using the constructor
@@ -1620,14 +1782,14 @@ class Repo{
   }
 
   useName(){
-    //Calls the static method as a property of the constructor
+    // Calls the static method as a property of the constructor
     return this.constructor.getName() + ' and it contains some really important stuff'
   }
 }
 
 // we need to instantiate the class to use non-static methods
 let r = new Repo()
-console.log(r.useName()) //Repo name is modern-js-cheatsheet and it contains some really important stuff
+console.log(r.useName()) // Repo name is modern-js-cheatsheet and it contains some really important stuff
 ```
 
 #### External resources
