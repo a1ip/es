@@ -1,7 +1,11 @@
 # Modern JavaScript Cheatsheet
 
 ![Modern JavaScript cheatsheet](https://i.imgur.com/aexPxMb.png)
-<small>Image Credits: [Ahmad Awais ⚡️](https://github.com/ahmadawais)</small>
+<sub>Image Credits: [Ahmad Awais ⚡️](https://github.com/ahmadawais)</sub>
+
+> If you like this content, you can ping me or follow me on Twitter :+1:
+
+[![Tweet for help](https://img.shields.io/twitter/follow/mbeaudru?label=Tweet%20%40mbeaudru&style=social)](https://twitter.com/mbeaudru/)
 
 ## Introduction
 
@@ -21,8 +25,10 @@ When you struggle to understand a notion, I suggest you look for answers on the 
 
 - [MDN (Mozilla Developer Network)](https://developer.mozilla.org/en-US/search?q=)
 - [You don't know JS (book)](https://github.com/getify/You-Dont-Know-JS)
+- [Eloquent JavaScript (book)](https://eloquentjavascript.net)
+- [Douglas Crockford's blog](https://www.crockford.com/javascript/)
 - [ES6 Features with examples](http://es6-features.org)
-- [WesBos blog (ES6)](http://wesbos.com/category/es6/)
+- [Wes Bos blog (ES6)](http://wesbos.com/category/es6/)
 - [Javascript Basics for Beginners](https://www.udacity.com/course/javascript-basics--ud804) - a free Udacity course
 - [Reddit (JavaScript)](https://www.reddit.com/r/javascript/)
 - [Google](https://www.google.com/) to find specific blog and resources
@@ -58,6 +64,7 @@ When you struggle to understand a notion, I suggest you look for answers on the 
         * [Array.prototype.map()](#arrayprototypemap)
         * [Array.prototype.filter()](#arrayprototypefilter)
         * [Array.prototype.reduce()](#arrayprototypereduce)
+        * [Array.prototype.find()](#arrayprototypefind)
       - [External Resource](#external-resource-2)
     + [Spread operator "..."](#spread-operator-)
       - [Sample code](#sample-code-3)
@@ -127,7 +134,7 @@ In JavaScript, there are three keywords available to declare a variable, and eac
 
 Variables declared with ```const``` keyword can't be reassigned, while ```let``` and ```var``` can.
 
-I recommend always declaring your variables with ```const``` by default, and with ```let``` if you need to *mutate* it or reassign it later.
+I recommend always declaring your variables with ```const``` by default, but with ```let``` if it is a variable that you need to *mutate* or reassign later.
 
 <table>
   <tr>
@@ -603,19 +610,20 @@ console.log(y) // "b"
 - [Destructuring Objects - WesBos](http://wesbos.com/destructuring-objects/)
 - [ExploringJS - Destructuring](http://exploringjs.com/es6/ch_destructuring.html)
 
-### Array methods - map / filter / reduce
+### Array methods - map / filter / reduce / find
 
-*Map*, *filter* and *reduce* are array methods that are coming from a programming paradigm named [*functional programming*](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0).
+*Map*, *filter*, *reduce* and *find* are array methods that are coming from a programming paradigm named [*functional programming*](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-functional-programming-7f218c68b3a0).
 
 To sum it up:
 
 - **Array.prototype.map()** takes an array, does something on its elements and returns an array with the transformed elements.
 - **Array.prototype.filter()** takes an array, decides element by element if it should keep it or not and returns an array with the kept elements only
 - **Array.prototype.reduce()** takes an array and aggregates the elements into a single value (which is returned)
+- **Array.prototype.find()** takes an array, and returns the first element that satisfies the provided condition.
 
 I recommend to use them as much as possible in following the principles of functional programming because they are composable, concise and elegant.
 
-With those three methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter* and *reduce* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things get easier.
+With those four methods, you can avoid the use of *for* and *forEach* loops in most situations. When you are tempted to do a *for* loop, try to do it with *map*, *filter*, *reduce* and *find* composed. You might struggle to do it at first because it requires you to learn a new way of thinking, but once you've got it things get easier.
 
 #### Sample code
 
@@ -624,6 +632,7 @@ const numbers = [0, 1, 2, 3, 4, 5, 6];
 const doubledNumbers = numbers.map(n => n * 2); // [0, 2, 4, 6, 8, 10, 12]
 const evenNumbers = numbers.filter(n => n % 2 === 0); // [0, 2, 4, 6]
 const sum = numbers.reduce((prev, next) => prev + next, 0); // 21
+const greaterThanFour = numbers.find((n) => n>4); // 5
 ```
 
 Compute total grade sum for students with grades 10 or above by composing map, filter and reduce:
@@ -779,6 +788,21 @@ Function returns *acc* + *n* --> 3 + 3 --> 6
 Function returns *acc* + *n* --> 15 + 6 --> 21
 
 As it is the last iteration step, **.reduce** returns 21.
+
+##### Array.prototype.find()
+
+```js
+const greaterThanZero = numbers.find(function(n) {
+  return n > 0; // return number just greater than 0 is present
+});
+console.log(greaterThanZero); // 1
+```
+
+**Note** : You will frequently encounter this method used in combination with [arrow functions](#-arrow-function)
+
+We are using .find on the *numbers* array, .find is iterating on each element of the array and passes it to our function, until the condition is met. The goal of the function is to return the element that satisfies the current testing function. The .find method executes the callback function once for each index of the array until the callback returns a truthy value.
+
+**Note** : It immediately returns the value of that element (that satisfies the condition) if found. Otherwise, returns undefined.
 
 #### External Resource
 
@@ -1239,7 +1263,7 @@ JavaScript is a [prototype-based](https://en.wikipedia.org/wiki/Prototype-based_
 
 The word *class* is indeed error prone if you are familiar with classes in other languages. If you do, avoid assuming how JavaScript classes work on this basis and consider it an entirely different notion.
 
-Since this document is not an attempt to teach you the language from the ground up, I will believe you know what prototypes are and how they behave. If you do not, see the external resouces listed below the sample code.
+Since this document is not an attempt to teach you the language from the ground up, I will assume you know what prototypes are and how they behave. If you do not, see the external resources listed below the sample code.
 
 #### Samples
 
@@ -1713,7 +1737,7 @@ The `static` keyword is used in classes to declare static methods. Static method
 #### Sample code
 
 ```js
-class Repo{
+class Repo {
   static getName() {
     return "Repo name is modern-js-cheatsheet"
   }
@@ -1735,12 +1759,12 @@ Static methods can be called within another static method by using the `this` ke
 To call a static method from another static method, the `this` keyword can be used like so;
 
 ```js
-class Repo{
+class Repo {
   static getName() {
     return "Repo name is modern-js-cheatsheet"
   }
 
-  static modifyName(){
+  static modifyName() {
     return this.getName() + '-added-this'
   }
 }
@@ -1756,12 +1780,12 @@ Non-static methods can call static methods in 2 ways;
 To get access to a static method from a non-static method we use the class name and call the static method like a property. e.g `ClassName.StaticMethodName`
 
 ```js
-class Repo{
+class Repo {
   static getName() {
     return "Repo name is modern-js-cheatsheet"
   }
 
-  useName(){
+  useName() {
     return Repo.getName() + ' and it contains some really important stuff'
   }
 }
@@ -1776,12 +1800,12 @@ console.log(r.useName()) // Repo name is modern-js-cheatsheet and it contains so
 Static methods can be called as properties on the constructor object.
 
 ```js
-class Repo{
+class Repo {
   static getName() {
     return "Repo name is modern-js-cheatsheet"
   }
 
-  useName(){
+  useName() {
     // Calls the static method as a property of the constructor
     return this.constructor.getName() + ' and it contains some really important stuff'
   }
